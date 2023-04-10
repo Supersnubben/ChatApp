@@ -1,0 +1,6 @@
+0000000000000000000000000000000000000000 17ed15c4683702c934f72c294bea542a5833053a Robin Blondin <robin.blondin@protonmail.com> 1681069076 +0200	clone: from github.com:Supersnubben/ChatApp.git
+17ed15c4683702c934f72c294bea542a5833053a bf7a043fb5fe138b4f0dffc7469368ebe7706e22 Robin Blondin <robin.blondin@protonmail.com> 1681133953 +0200	commit: Added and configured firebase tools
+bf7a043fb5fe138b4f0dffc7469368ebe7706e22 47392150d5ebd0815a23fba50af3aa83c1024a8b Robin Blondin <robin.blondin@protonmail.com> 1681135026 +0200	commit (amend): Added and configured firebase tools
+47392150d5ebd0815a23fba50af3aa83c1024a8b dc6f6c638b62b08531e77f059fd47428200b52bd Robin Blondin <robin.blondin@protonmail.com> 1681135045 +0200	commit (amend): Added and configured firebase tools
+dc6f6c638b62b08531e77f059fd47428200b52bd 2dfe6ea103e3a4fc2221f7d38088f989a36820fe Robin Blondin <robin.blondin@protonmail.com> 1681135584 +0200	commit (amend): Added and configured firebase tools
+2dfe6ea103e3a4fc2221f7d38088f989a36820fe 6b25e05ee01ec585831f8350d1100da589886795 Robin Blondin <robin.blondin@protonmail.com> 1681143542 +0200	commit: Added new file to fix git push error
