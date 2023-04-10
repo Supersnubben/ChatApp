@@ -1,12 +1,14 @@
 package com.example.chatapp.utilities
 
 class Constants {
-    var KEY_COLLECTION_USERS = "users"
-    var KEY_NAME = "name"
-    var KEY_EMAIL = "email"
-    var KEY_PASSWORD = "password"
-    var KEY_PREFERENCE_NAME = "chatAppPreference"
-    var KEY_IS_SIGNED_IN = "isSignedIn"
-    var KEY_USER_ID = "userId"
-    var KEY_IMAGE = "image"
+    companion object {
+        const val KEY_COLLECTION_USERS = "users"
+        const val KEY_NAME = "name"
+        const val KEY_EMAIL = "email"
+        const val KEY_PASSWORD = "password"
+        const val KEY_PREFERENCE_NAME = "chatAppPreference"
+        const val KEY_IS_SIGNED_IN = "isSignedIn"
+        const val KEY_USER_ID = "userId"
+        const val KEY_IMAGE = "image"
+    }
 }

@@ -25,7 +25,7 @@ import java.io.FileNotFoundException
 
 @SuppressLint("StaticFieldLeak")
 private lateinit var binding: ActivitySignUpBinding
-private var preferenceManager = PreferenceManager(input)
+private var preferenceManager: PreferenceManager = TODO()
 private lateinit var encodedImage: String
 @Suppress("DEPRECATION")
 class SignUpActivity : AppCompatActivity() {
