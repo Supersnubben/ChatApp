@@ -60,7 +60,7 @@ class SignInActivity : AppCompatActivity() {
                 }
                 else {
                     loading(false)
-                    showToast("Unable to sign in")
+                    showToast("Can't find any user with these credentials")
                 }
             }
     }
@@ -81,20 +81,17 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun isValidSignInDetails(): Boolean {
-        if (binding.inputEmail.text.toString().trim().isEmpty()) {
+        return if (binding.inputEmail.text.toString().trim().isEmpty()) {
             showToast("Enter email")
-            return false;
-        }
-        else if (Patterns.EMAIL_ADDRESS.matcher(binding.inputEmail.text.toString()).matches()) {
+            false;
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(binding.inputEmail.text.toString()).matches()) {
             showToast("Enter valid email")
-            return false
-        }
-        else if (binding.inputPassword.text.toString().trim().isEmpty()){
+            false
+        } else if (binding.inputPassword.text.toString().trim().isEmpty()){
             showToast("Enter password")
-            return false
-        }
-        else {
-            return true
+            false
+        } else {
+            true
         }
     }
 
