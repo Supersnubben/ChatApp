@@ -86,9 +86,9 @@ class SignUpActivity : AppCompatActivity() {
         val previewHeight = bitmap.height * previewWidth / bitmap.width
         val previewBitmap = Bitmap.createScaledBitmap(bitmap, previewWidth, previewHeight, false)
         val byteArrayOutputStream = ByteArrayOutputStream()
-        val bytes = byteArrayOutputStream.toByteArray()
         previewBitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream)
 
+        val bytes = byteArrayOutputStream.toByteArray()
         return Base64.encodeToString(bytes, Base64.DEFAULT)
 
         }
@@ -125,7 +125,7 @@ class SignUpActivity : AppCompatActivity() {
             return false
         }
         else if (!Patterns.EMAIL_ADDRESS.matcher(binding.inputEmail.text.toString()).matches()) {
-            showToast("Enter valid image")
+            showToast("Enter valid email")
             return false
         }
         else if (binding.inputPassword.text.toString().trim().isEmpty()) {
@@ -152,7 +152,7 @@ class SignUpActivity : AppCompatActivity() {
         }
         else {
             binding.progressBar.visibility = View.INVISIBLE
-            binding.progressBar.visibility = View.VISIBLE
+            binding.buttonSignUp.visibility = View.VISIBLE
         }
     }
 
