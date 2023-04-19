@@ -28,9 +28,11 @@ class UsersActivity : AppCompatActivity() {
         binding.imageBack.setOnClickListener { finish() }
     }
 
-    private fun getUsers() {
+    private fun getUsers()
+    {
         loading(true)
         val database = FirebaseFirestore.getInstance()
+
         database.collection(Constants.KEY_COLLECTION_USERS)
             .get()
             .addOnCompleteListener { task ->
@@ -60,7 +62,8 @@ class UsersActivity : AppCompatActivity() {
                 else {
                     showErrorMessage()
                 }
-            }}
+            }
+    }
 
     private fun showErrorMessage() {
         binding.textErrorMessage.text = String.format("%s", "No user available")
