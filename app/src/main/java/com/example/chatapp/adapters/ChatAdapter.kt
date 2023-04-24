@@ -12,8 +12,7 @@ import com.example.chatapp.models.ChatMessage
 class ChatAdapter(
     private var chatMessage: List<ChatMessage>,
     private var receiverProfileImage: Bitmap,
-    private var senderId: String
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>()
+    private var senderId: String) : RecyclerView.Adapter<RecyclerView.ViewHolder>()
 {
     init
     {

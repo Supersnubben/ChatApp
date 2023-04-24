@@ -16,12 +16,14 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity()
+{
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var preferenceManager: PreferenceManager
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -31,7 +33,8 @@ class MainActivity : AppCompatActivity() {
         setListeners()
     }
 
-    private fun setListeners() {
+    private fun setListeners()
+    {
         binding.imageSignOut.setOnClickListener {
             signOut()
         }
@@ -40,22 +43,26 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadUserDetails() {
+    private fun loadUserDetails()
+    {
         binding.textName.text = preferenceManager.getString(Constants.KEY_NAME)
         val bytes = Base64.decode(preferenceManager.getString(Constants.KEY_IMAGE), Base64.DEFAULT)
         val bitmap = BitmapFactory.decodeByteArray(bytes,0, bytes.size)
         binding.imageProfile.setImageBitmap(bitmap)
     }
 
-    private fun showToast(message: String) {
+    private fun showToast(message: String)
+    {
         Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
     }
 
-    private fun getToken() {
+    private fun getToken()
+    {
         FirebaseMessaging.getInstance().token.addOnSuccessListener { token -> updateToken(token) }
     }
 
-    private fun updateToken(token: String) {
+    private fun updateToken(token: String)
+    {
         val database = FirebaseFirestore.getInstance()
         val documentReference = preferenceManager.getString(Constants.KEY_USER_ID)?.let {
             database.collection(Constants.KEY_COLLECTION_USERS)
@@ -65,7 +72,8 @@ class MainActivity : AppCompatActivity() {
             ?.addOnFailureListener { showToast("Unable to update token") }
     }
 
-    private fun signOut() {
+    private fun signOut()
+    {
         showToast("Signing out...")
         val database = FirebaseFirestore.getInstance()
         val documentReference = preferenceManager.getString(Constants.KEY_USER_ID)?.let {
@@ -73,10 +81,10 @@ class MainActivity : AppCompatActivity() {
                 .document(it)
         }
         val updates = hashMapOf<String, Any>(
-            Constants.KEY_FCM_TOKEN to FieldValue.delete()
-        )
+            Constants.KEY_FCM_TOKEN to FieldValue.delete())
 
-        if (documentReference != null) {
+        if (documentReference != null)
+        {
             documentReference.update(updates)
                 .addOnSuccessListener {
                     preferenceManager.clear()

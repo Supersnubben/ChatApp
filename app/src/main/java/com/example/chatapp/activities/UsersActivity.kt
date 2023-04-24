@@ -13,11 +13,13 @@ import com.example.chatapp.utilities.PreferenceManager
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QueryDocumentSnapshot
 
-class UsersActivity : AppCompatActivity(), UserListener{
+class UsersActivity : AppCompatActivity(), UserListener
+{
 
     private lateinit var binding: ActivityUsersBinding
     private lateinit var preferenceManager: PreferenceManager
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
         binding = ActivityUsersBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -26,7 +28,8 @@ class UsersActivity : AppCompatActivity(), UserListener{
         getUsers()
     }
 
-    private fun setListeners() {
+    private fun setListeners()
+    {
         binding.imageBack.setOnClickListener { finish() }
     }
 
@@ -37,13 +40,16 @@ class UsersActivity : AppCompatActivity(), UserListener{
 
         database.collection(Constants.KEY_COLLECTION_USERS)
             .get()
-            .addOnCompleteListener { task ->
+            .addOnCompleteListener{ task ->
                 loading(false)
                 val currentUserId = preferenceManager.getString(Constants.KEY_USER_ID)
-                if(task.isSuccessful && task.result != null) {
+                if(task.isSuccessful && task.result != null)
+                {
                     val users = ArrayList<User>()
-                    for (queryDocumentSnapshot: QueryDocumentSnapshot in task.result) {
-                        if (currentUserId.equals(queryDocumentSnapshot.id)) {
+                    for (queryDocumentSnapshot: QueryDocumentSnapshot in task.result)
+                    {
+                        if (currentUserId.equals(queryDocumentSnapshot.id))
+                        {
                             continue
                         }
                         val user = User()
@@ -53,37 +59,46 @@ class UsersActivity : AppCompatActivity(), UserListener{
                         user.token = queryDocumentSnapshot.getString(Constants.KEY_FCM_TOKEN) ?: ""
                         users.add(user)
                     }
-                    if (users.size > 0) {
+                    if (users.size > 0)
+                    {
                         val usersAdapter = UsersAdapter(users, this)
                         binding.usersRecyclerView.adapter = usersAdapter
                         binding.usersRecyclerView.visibility = View.VISIBLE
-                    } else {
+                    }
+                    else
+                    {
                         showErrorMessage()
                     }
                 }
-                else {
+                else
+                {
                     showErrorMessage()
                 }
             }
     }
 
-    private fun showErrorMessage() {
+    private fun showErrorMessage()
+    {
         binding.textErrorMessage.text = String.format("%s", "No user available")
         binding.textErrorMessage.visibility = View.VISIBLE
     }
 
-    private fun loading(isLoading: Boolean) {
-        if (isLoading) {
+    private fun loading(isLoading: Boolean)
+    {
+        if (isLoading)
+        {
             binding.progressBar.visibility = View.VISIBLE
         }
-        else {
+        else
+        {
             binding.progressBar.visibility = View.INVISIBLE
         }
     }
-  override fun onUserClicked(user: User) {
+  override fun onUserClicked(user: User)
+  {
         val intent = Intent(applicationContext, ChatActivity::class.java)
         intent.putExtra(Constants.KEY_USER, user)
         startActivity(intent)
         finish()
-    }
+  }
 }

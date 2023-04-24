@@ -8,10 +8,12 @@ import com.example.chatapp.databinding.ActivityChatBinding
 import com.example.chatapp.models.User
 import com.example.chatapp.utilities.Constants
 
-class ChatActivity : AppCompatActivity() {
+class ChatActivity : AppCompatActivity()
+{
     private lateinit var binding: ActivityChatBinding
     private var receiverUser: User? = null
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
         binding = ActivityChatBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -19,12 +21,14 @@ class ChatActivity : AppCompatActivity() {
         loadReceiverDetails()
     }
 
-    private fun loadReceiverDetails() {
+    private fun loadReceiverDetails()
+    {
         receiverUser = intent.getSerializableExtra(Constants.KEY_USER) as? User
         binding.textName.text = receiverUser?.name
     }
 
-    private fun setListeners() {
+    private fun setListeners()
+    {
         binding.imageBack.setOnClickListener { onBackPressed() }
     }
 }

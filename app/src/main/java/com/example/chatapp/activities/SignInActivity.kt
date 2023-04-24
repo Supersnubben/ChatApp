@@ -15,15 +15,18 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 
 
-class SignInActivity : AppCompatActivity() {
+class SignInActivity : AppCompatActivity()
+{
 
     private lateinit var binding: ActivitySignInBinding
     private lateinit var preferenceManager: PreferenceManager
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
         preferenceManager = PreferenceManager(applicationContext)
-        if (preferenceManager.getBoolean(Constants.KEY_IS_SIGNED_IN)) {
+        if (preferenceManager.getBoolean(Constants.KEY_IS_SIGNED_IN))
+        {
             var intent = Intent(applicationContext, MainActivity::class.java)
             startActivity(intent)
             finish()
@@ -32,18 +35,21 @@ class SignInActivity : AppCompatActivity() {
         setContentView(binding.root)
         setListeners()
     }
-    private fun setListeners() {
+    private fun setListeners()
+    {
         binding.textCreateNewAccount.setOnClickListener {
             startActivity(Intent(applicationContext, SignUpActivity::class.java))
         }
         binding.buttonSignIn.setOnClickListener {
-            if (isValidSignInDetails()) {
+            if (isValidSignInDetails())
+            {
                 signIn()
             }
         }
     }
 
-    private fun signIn() {
+    private fun signIn()
+    {
         loading(true)
         var database = FirebaseFirestore.getInstance();
         database.collection(Constants.KEY_COLLECTION_USERS)
@@ -70,37 +76,42 @@ class SignInActivity : AppCompatActivity() {
             }
     }
 
-    private fun loading (isLoading: Boolean) {
-        if (isLoading) {
+    private fun loading (isLoading: Boolean)
+    {
+        if (isLoading)
+        {
             binding.buttonSignIn.visibility = View.INVISIBLE
             binding.progressBar.visibility = View.VISIBLE
         }
-        else {
+        else
+        {
             binding.progressBar.visibility = View.INVISIBLE
             binding.buttonSignIn.visibility = View.VISIBLE
         }
     }
 
-    private fun showToast (message: String) {
+    private fun showToast (message: String)
+    {
         Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
     }
 
-    private fun isValidSignInDetails(): Boolean {
-        return if (binding.inputEmail.text.toString().trim().isEmpty()) {
+    private fun isValidSignInDetails(): Boolean
+    {
+        return if (binding.inputEmail.text.toString().trim().isEmpty())
+        {
             showToast("Enter email")
             false;
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(binding.inputEmail.text.toString()).matches()) {
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(binding.inputEmail.text.toString()).matches())
+        {
             showToast("Enter valid email")
             false
-        } else if (binding.inputPassword.text.toString().trim().isEmpty()){
+        } else if (binding.inputPassword.text.toString().trim().isEmpty())
+        {
             showToast("Enter password")
             false
-        } else {
+        } else
+        {
             true
         }
     }
-
-
-
-
 }

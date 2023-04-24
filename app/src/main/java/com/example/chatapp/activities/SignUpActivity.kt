@@ -28,8 +28,10 @@ private lateinit var binding: ActivitySignUpBinding
 private lateinit var preferenceManager: PreferenceManager
 private lateinit var encodedImage: String
 @Suppress("DEPRECATION")
-class SignUpActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
+class SignUpActivity : AppCompatActivity()
+{
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -37,10 +39,12 @@ class SignUpActivity : AppCompatActivity() {
         setListeners()
     }
 
-    private fun setListeners() {
+    private fun setListeners()
+    {
         binding.textSignIn.setOnClickListener { onBackPressed() }
         binding.buttonSignUp.setOnClickListener {
-            if (isValidSignUpDetails()) {
+            if (isValidSignUpDetails())
+            {
                 signUp()
             }
         }
@@ -51,10 +55,12 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
-    private fun showToast(message: String) {
+    private fun showToast(message: String)
+    {
         Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
     }
-    private fun signUp() {
+    private fun signUp()
+    {
         loading(true)
         val database = FirebaseFirestore.getInstance()
         val user = hashMapOf<String, Any>(
@@ -78,10 +84,11 @@ class SignUpActivity : AppCompatActivity() {
                 loading(false)
                 exception.message?.let { showToast(it) }
             }
-        }
+    }
 
 
-    private fun encodeImage(bitmap: Bitmap): String {
+    private fun encodeImage(bitmap: Bitmap): String
+    {
         val previewWidth = 150
         val previewHeight = bitmap.height * previewWidth / bitmap.width
         val previewBitmap = Bitmap.createScaledBitmap(bitmap, previewWidth, previewHeight, false)
@@ -91,72 +98,85 @@ class SignUpActivity : AppCompatActivity() {
         val bytes = byteArrayOutputStream.toByteArray()
         return Base64.encodeToString(bytes, Base64.DEFAULT)
 
-        }
+    }
 
     private val pickImage = registerForActivityResult(ActivityResultContracts.StartActivityForResult())
     { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             result.data?.data?.let { imageUri ->
-                try {
+                try
+                {
                     applicationContext.contentResolver.openInputStream(imageUri)?.use { inputStream ->
                         val bitmap = BitmapFactory.decodeStream(inputStream)
                         binding.imageProfile.setImageBitmap(bitmap)
                         binding.textAddImage.visibility = View.GONE
                         encodedImage = encodeImage(bitmap)
                     }
-                } catch (e: FileNotFoundException) {
+                }
+                catch (e: FileNotFoundException)
+                {
                     e.printStackTrace()
                 }
             }
         }
     }
 
-    private fun isValidSignUpDetails(): Boolean {
-        if(encodedImage.isEmpty()) {
+    private fun isValidSignUpDetails(): Boolean
+    {
+        if(encodedImage.isEmpty())
+        {
             showToast("Select profile image")
             return false
         }
-        else if (binding.inputName.text.toString().trim().isEmpty()) {
+        else if (binding.inputName.text.toString().trim().isEmpty())
+        {
             showToast("Enter name")
             return false
         }
-        else if (binding.inputEmail.text.toString().trim().isEmpty()) {
+        else if (binding.inputEmail.text.toString().trim().isEmpty())
+        {
             showToast("Enter email")
             return false
         }
-        else if (!Patterns.EMAIL_ADDRESS.matcher(binding.inputEmail.text.toString()).matches()) {
+        else if (!Patterns.EMAIL_ADDRESS.matcher(binding.inputEmail.text.toString()).matches())
+        {
             showToast("Enter valid email")
             return false
         }
-        else if (binding.inputPassword.text.toString().trim().isEmpty()) {
+        else if (binding.inputPassword.text.toString().trim().isEmpty())
+        {
             showToast("Enter password")
             return false
         }
-        else if (binding.inputConfirmPassword.text.toString().trim().isEmpty()) {
+        else if (binding.inputConfirmPassword.text.toString().trim().isEmpty())
+        {
             showToast("Confirm your password")
             return false
         }
-        else if (binding.inputPassword.text.toString() != binding.inputConfirmPassword.text.toString()) {
+        else if (binding.inputPassword.text.toString() != binding.inputConfirmPassword.text.toString())
+        {
             showToast("Password must be the same in both fields")
             return false
         }
-        else {
+        else
+        {
             return true
         }
     }
 
-    private fun loading (isLoading: Boolean) {
-        if (isLoading) {
+    private fun loading (isLoading: Boolean)
+    {
+        if (isLoading)
+        {
             binding.buttonSignUp.visibility = View.INVISIBLE
             binding.progressBar.visibility = View.VISIBLE
         }
-        else {
+        else
+        {
             binding.progressBar.visibility = View.INVISIBLE
             binding.buttonSignUp.visibility = View.VISIBLE
         }
     }
-
-
 }
 
 
