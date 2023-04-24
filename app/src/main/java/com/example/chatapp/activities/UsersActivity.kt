@@ -80,7 +80,6 @@ class UsersActivity : AppCompatActivity(), UserListener{
             binding.progressBar.visibility = View.INVISIBLE
         }
     }
-
   override fun onUserClicked(user: User) {
         val intent = Intent(applicationContext, ChatActivity::class.java)
         intent.putExtra(Constants.KEY_USER, user)
