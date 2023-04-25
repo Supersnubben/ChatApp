@@ -1,6 +1,7 @@
 package com.example.chatapp.activities
 
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
@@ -13,21 +14,18 @@ import com.example.chatapp.utilities.Constants
 import com.example.chatapp.utilities.PreferenceManager
 import com.google.firebase.firestore.FirebaseFirestore
 import android.util.Base64
+import android.view.View
+import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.QuerySnapshot
 import java.text.SimpleDateFormat
-import java.util.ArrayList
-import java.util.Date
-import java.util.EventListener
-import java.util.HashMap
-import java.util.Locale
-import java.util.Objects
+import java.util.*
 
 class ChatActivity : AppCompatActivity()
 {
     private lateinit var binding: ActivityChatBinding
     private var receiverUser: User? = null
-    private lateinit var chatMessages: List<ChatMessage>
+    private lateinit var chatMessages: MutableList<ChatMessage>
     private lateinit var chatAdapter: ChatAdapter
     private lateinit var preferenceManager: PreferenceManager
     private lateinit var database: FirebaseFirestore
@@ -39,12 +37,13 @@ class ChatActivity : AppCompatActivity()
         setListeners()
         loadReceiverDetails()
         init()
+        listenMessages()
     }
 
     private fun init()
      {
         preferenceManager = PreferenceManager(applicationContext)
-        chatMessages = ArrayList<ChatMessage>()
+        chatMessages = mutableListOf()
         chatAdapter = ChatAdapter(chatMessages,
             getBitmapFromEncodedString(receiverUser!!.image),
             preferenceManager.getString(Constants.KEY_USER_ID)!!
@@ -62,12 +61,24 @@ class ChatActivity : AppCompatActivity()
         message[Constants.KEY_TIMESTAMP] = Date()
         database.collection(Constants.KEY_COLLECTION_CHAT).add(message)
         binding.inputMessage.text = null
-
     }
 
-    private val eventListener = object : EventListener
+    private fun listenMessages()
     {
-        fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?)
+        database.collection(Constants.KEY_COLLECTION_CHAT)
+            .whereEqualTo(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID))
+            .whereEqualTo(Constants.KEY_RECEIVER_ID, receiverUser!!.id)
+            .addSnapshotListener(eventListener)
+        database.collection(Constants.KEY_COLLECTION_CHAT)
+            .whereEqualTo(Constants.KEY_SENDER_ID, receiverUser!!.id)
+            .whereEqualTo(Constants.KEY_RECEIVER_ID, preferenceManager.getString(Constants.KEY_USER_ID))
+            .addSnapshotListener(eventListener)
+    }
+
+    private val eventListener = object : com.google.firebase.firestore.EventListener<QuerySnapshot>
+    {
+        @SuppressLint("NotifyDataSetChanged")
+        override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?)
         {
             if (error != null)
             {
@@ -78,6 +89,8 @@ class ChatActivity : AppCompatActivity()
                 val count = chatMessages.size
                 for (documentChange in value.documentChanges)
                 {
+                    if(documentChange.type == DocumentChange.Type.ADDED)
+                    {
                     val chatMessage = ChatMessage()
                     chatMessage.senderId =
                         documentChange.document.getString(Constants.KEY_SENDER_ID).toString()
@@ -86,12 +99,25 @@ class ChatActivity : AppCompatActivity()
                     chatMessage.message =
                         documentChange.document.getString(Constants.KEY_MESSAGE).toString()
                     chatMessage.dateTime =
-                        getReadableDateTime(documentChange.document.getDate(Constants.KEY_TIMESTAMP)!!).toString()
+                        getReadableDateTime(documentChange.document.getDate(Constants.KEY_TIMESTAMP)!!)
                     chatMessage.dateObject =
                         documentChange.document.getDate(Constants.KEY_TIMESTAMP)!!
                     chatMessages.add(chatMessage)
+                    }
                 }
+                chatMessages.sortedWith(compareBy { it.dateObject })
+                if(count == 0)
+                {
+                    chatAdapter.notifyDataSetChanged()
+                }
+                else
+                {
+                    chatAdapter.notifyItemRangeInserted(chatMessages.size, chatMessages.size)
+                    binding.chatRecyclerView.smoothScrollToPosition(chatMessages.size - 1)
+                }
+                binding.chatRecyclerView.visibility = View.VISIBLE
             }
+            binding.progressBar.visibility = View.GONE
         }
     }
     private fun getBitmapFromEncodedString(encodedImage: String): Bitmap
@@ -112,7 +138,7 @@ class ChatActivity : AppCompatActivity()
         binding.layoutSend.setOnClickListener { sendMessage() }
     }
 
-    private fun getReadableDateTime(date: Date): SimpleDateFormat {
-        return SimpleDateFormat("MMMM dd, yyyy - hh:mm a", Locale.getDefault())
+    private fun getReadableDateTime(date: Date): String {
+        return SimpleDateFormat("MMMM dd, yyyy - hh:mm a", Locale.getDefault()).format(date)
     }
 }
