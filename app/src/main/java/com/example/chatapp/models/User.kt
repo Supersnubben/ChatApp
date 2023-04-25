@@ -8,4 +8,5 @@ class User: Serializable
     var image: String = ""
     var email: String = ""
     var token: String = ""
+    var id: String = ""
 }
