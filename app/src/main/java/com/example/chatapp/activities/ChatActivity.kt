@@ -13,9 +13,14 @@ import com.example.chatapp.utilities.Constants
 import com.example.chatapp.utilities.PreferenceManager
 import com.google.firebase.firestore.FirebaseFirestore
 import android.util.Base64
+import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.QuerySnapshot
+import java.text.SimpleDateFormat
 import java.util.ArrayList
 import java.util.Date
+import java.util.EventListener
 import java.util.HashMap
+import java.util.Locale
 import java.util.Objects
 
 class ChatActivity : AppCompatActivity()
@@ -36,7 +41,8 @@ class ChatActivity : AppCompatActivity()
         init()
     }
 
-    private fun init() {
+    private fun init()
+     {
         preferenceManager = PreferenceManager(applicationContext)
         chatMessages = ArrayList<ChatMessage>()
         chatAdapter = ChatAdapter(chatMessages,
@@ -47,7 +53,8 @@ class ChatActivity : AppCompatActivity()
         database = FirebaseFirestore.getInstance()
     }
 
-    private fun sendMessage() {
+    private fun sendMessage()
+    {
         val message = HashMap<String, Any>()
         message[Constants.KEY_SENDER_ID] = preferenceManager.getString(Constants.KEY_USER_ID)!!
         message[Constants.KEY_RECEIVER_ID] = receiverUser!!.id
@@ -58,7 +65,37 @@ class ChatActivity : AppCompatActivity()
 
     }
 
-    private fun getBitmapFromEncodedString(encodedImage: String): Bitmap {
+    private val eventListener = object : EventListener
+    {
+        fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?)
+        {
+            if (error != null)
+            {
+                return
+            }
+            if (value != null)
+            {
+                val count = chatMessages.size
+                for (documentChange in value.documentChanges)
+                {
+                    val chatMessage = ChatMessage()
+                    chatMessage.senderId =
+                        documentChange.document.getString(Constants.KEY_SENDER_ID).toString()
+                    chatMessage.receiverId =
+                        documentChange.document.getString(Constants.KEY_RECEIVER_ID).toString()
+                    chatMessage.message =
+                        documentChange.document.getString(Constants.KEY_MESSAGE).toString()
+                    chatMessage.dateTime =
+                        getReadableDateTime(documentChange.document.getDate(Constants.KEY_TIMESTAMP)!!).toString()
+                    chatMessage.dateObject =
+                        documentChange.document.getDate(Constants.KEY_TIMESTAMP)!!
+                    chatMessages.add(chatMessage)
+                }
+            }
+        }
+    }
+    private fun getBitmapFromEncodedString(encodedImage: String): Bitmap
+    {
         val bytes = Base64.decode(encodedImage, Base64.DEFAULT)
         return BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
     }
@@ -73,5 +110,9 @@ class ChatActivity : AppCompatActivity()
     {
         binding.imageBack.setOnClickListener { onBackPressed() }
         binding.layoutSend.setOnClickListener { sendMessage() }
+    }
+
+    private fun getReadableDateTime(date: Date): SimpleDateFormat {
+        return SimpleDateFormat("MMMM dd, yyyy - hh:mm a", Locale.getDefault())
     }
 }
