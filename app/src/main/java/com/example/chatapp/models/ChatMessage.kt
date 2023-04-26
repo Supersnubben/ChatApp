@@ -9,5 +9,8 @@ class ChatMessage
     var message: String = ""
     var dateTime: String = ""
     var dateObject: Date = Date()
+    var conversationId: String = ""
+    var conversationName: String = ""
+    var conversationImage: String = ""
 
 }
