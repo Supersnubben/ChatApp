@@ -128,13 +128,13 @@ class ChatActivity : AppCompatActivity()
 
     private fun loadReceiverDetails()
     {
-        receiverUser = intent.getSerializableExtra(Constants.KEY_USER) as? User
+        receiverUser = intent.getSerializableExtra(Constants.KEY_USER, User::class.java)
         binding.textName.text = receiverUser?.name
     }
 
     private fun setListeners()
     {
-        binding.imageBack.setOnClickListener { onBackPressed() }
+        binding.imageBack.setOnClickListener { finish() }
         binding.layoutSend.setOnClickListener { sendMessage() }
     }
 

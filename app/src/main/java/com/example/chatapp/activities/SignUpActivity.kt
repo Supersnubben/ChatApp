@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.chatapp.databinding.ActivitySignInBinding
 import com.example.chatapp.databinding.ActivitySignUpBinding
 import android.content.Intent
 import android.graphics.Bitmap
@@ -14,12 +13,10 @@ import android.util.Base64
 import android.util.Patterns
 import android.view.View
 import android.widget.Toast
-import androidx.activity.OnBackPressedDispatcher
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.chatapp.utilities.Constants
 import com.example.chatapp.utilities.PreferenceManager
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
 import java.io.ByteArrayOutputStream
 import java.io.FileNotFoundException
 

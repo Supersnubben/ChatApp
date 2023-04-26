@@ -10,22 +10,16 @@ import com.example.chatapp.databinding.ItemContainerSentMessageBinding
 import com.example.chatapp.models.ChatMessage
 
 class ChatAdapter(
-    private var chatMessage: List<ChatMessage>,
-    private var receiverProfileImage: Bitmap,
-    private var senderId: String) : RecyclerView.Adapter<RecyclerView.ViewHolder>()
-{
-    init
-    {
-        this.chatMessage = chatMessage
-        this.receiverProfileImage = receiverProfileImage
-        this.senderId = senderId
-    }
+    private val chatMessage: List<ChatMessage>,
+    private val receiverProfileImage: Bitmap,
+    private val senderId: String
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    var VIEW_TYPE_SENT = 1
-    var VIEW_TYPE_RECEIVED = 2
+    private var viewTypeSent = 1
+    private var viewTypeReceived = 2
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        if (viewType == VIEW_TYPE_SENT)
+        if (viewType == viewTypeSent)
         {
             return SentMessageViewHolder(
                 ItemContainerSentMessageBinding.inflate(
@@ -45,7 +39,7 @@ class ChatAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int)
     {
-        if(getItemViewType(position) == VIEW_TYPE_SENT)
+        if(getItemViewType(position) == viewTypeSent)
         {
             (holder as SentMessageViewHolder).setData(chatMessage[position])
         }
@@ -63,9 +57,9 @@ class ChatAdapter(
     override fun getItemViewType(position: Int): Int
     {
         return if(chatMessage[position].senderId == senderId) {
-            VIEW_TYPE_SENT
+            viewTypeSent
         } else {
-            VIEW_TYPE_RECEIVED
+            viewTypeReceived
         }
     }
 
@@ -75,7 +69,7 @@ class ChatAdapter(
         fun setData(chatMessage: ChatMessage)
         {
             binding.textMessage.text = chatMessage.message
-            binding.textMessage.text = chatMessage.dateTime
+            binding.textDateTime.text = chatMessage.dateTime
         }
     }
 

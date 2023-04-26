@@ -1,7 +1,6 @@
 package com.example.chatapp.utilities
 
 import android.content.Context
-import android.content.SharedPreferences
 
 class PreferenceManager(context: Context)
 {
