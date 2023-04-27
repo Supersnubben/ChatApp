@@ -13,7 +13,9 @@ import android.util.Base64
 import android.view.View
 import android.widget.Toast
 import com.example.chatapp.adapters.RecentConversationsAdapter
+import com.example.chatapp.listeners.ConversationListener
 import com.example.chatapp.models.ChatMessage
+import com.example.chatapp.models.User
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.firestore.DocumentChange
@@ -24,8 +26,8 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.messaging.FirebaseMessaging
 import java.util.Collections
 
-class MainActivity : AppCompatActivity()
-{
+class MainActivity : AppCompatActivity(), ConversationListener {
+
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var preferenceManager: PreferenceManager
@@ -48,8 +50,8 @@ class MainActivity : AppCompatActivity()
 
     private fun init()
     {
-        conversations = mutableListOf()
-        conversationsAdapter = RecentConversationsAdapter(conversations)
+        conversations = ArrayList()
+        conversationsAdapter = RecentConversationsAdapter(conversations, this)
         binding.conversationsRecyclerView.adapter = conversationsAdapter
         database = FirebaseFirestore.getInstance()
     }
@@ -187,4 +189,10 @@ class MainActivity : AppCompatActivity()
         }
     }
 
+    override fun onConversationClicked(user: User)
+    {
+        var intent = Intent(applicationContext, ChatActivity::class.java)
+        intent.putExtra(Constants.KEY_USER, user)
+        startActivity(intent)
+    }
 }
